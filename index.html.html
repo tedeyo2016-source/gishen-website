@@ -403,22 +403,17 @@
       <p>Tell us what you need and we will respond with pricing, options, and next steps.</p>
     </div>
 
-    <form
-  class="quote-form"
-  action="https://formsubmit.co/orders@gishion-digital.com"
-  method="POST"
-  enctype="multipart/form-data"
->
+    <form class="quote-form" id="quoteForm">
       <div class="form-row">
-        <input type="text" name="Full Name" placeholder="Full Name" required />
-        <input type="tel" name="Phone Number" placeholder="Phone Number" required />
+        <input type="text" name="fullName" placeholder="Full Name" required />
+        <input type="tel" name="phone" placeholder="Phone Number" required />
       </div>
       <div class="form-row">
-        <input type="email" name="Phone Number" placeholder="Email Address" required />
-        <input type="text" name="Organization / Business Name" placeholder="Organization / Business Name" />
+        <input type="email" name="email" placeholder="Email Address" required />
+        <input type="text" name="organization" placeholder="Organization / Business Name" />
       </div>
       <div class="form-row">
-        <select required>
+        <select name="service" required>
           <option value="">Select Service Needed</option>
           <option>Custom Printing</option>
           <option>T-Shirts / Apparel</option>
@@ -429,20 +424,17 @@
           <option>Event Materials</option>
           <option>Graphic Design</option>
         </select>
-        <input type="text" name="Quantity Needed" placeholder="Quantity Needed" />
+        <input type="text" name="quantity" placeholder="Quantity Needed" />
       </div>
       <div class="form-row">
-        <input type="date" name="Deadline" placeholder="Deadline" />
-        <input type="file" />
+        <input type="date" name="deadline" />
+        <input type="file" name="uploadedFile" />
       </div>
-      <textarea placeholder="Describe your project, size, color, material, deadline, logo details, or special instructions."></textarea>
-      <button type="submit">Submit Quote Request</button>
+      <textarea name="message" placeholder="Describe your project, size, color, material, deadline, logo details, or special instructions."></textarea>
+      <button type="submit" id="submitQuoteButton">Submit Quote Request</button>
+      <p id="formStatus" style="margin-top:16px; font-weight:bold;"></p>
     </form>
-    <input type="hidden" name="_subject" value="New Gishen Quote Request">
-<input type="hidden" name="_captcha" value="false">
-<input type="hidden" name="_template" value="table">
-<input type="hidden" name="_next" value="https://gishen-digital.com/thankyou.html">
-    </section>
+  </section>
 
   <section id="contact">
     <div class="section-title">
@@ -469,5 +461,58 @@
   <footer>
     <p>&copy; 2026 <span>Gishen Digital Solutions LLC</span>. All rights reserved.</p>
   </footer>
+
+  <script>
+    const quoteForm = document.getElementById("quoteForm");
+    const formStatus = document.getElementById("formStatus");
+    const submitQuoteButton = document.getElementById("submitQuoteButton");
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz3NM_dreWtEDr5SZ1l1YRcQk9iBuaZxwYiG557z_Ekv7BfA0O8RvmjGMWj7x6XIM8T/exec";
+
+    quoteForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      submitQuoteButton.disabled = true;
+      submitQuoteButton.textContent = "Submitting...";
+      formStatus.style.color = "#0f172a";
+      formStatus.textContent = "Submitting your quote request...";
+
+      const formData = new FormData(quoteForm);
+      const uploadedFile = formData.get("uploadedFile");
+      const fileName = uploadedFile && uploadedFile.name ? uploadedFile.name : "";
+      const originalMessage = formData.get("message") || "";
+
+      const data = {
+        fullName: formData.get("fullName") || "",
+        phone: formData.get("phone") || "",
+        email: formData.get("email") || "",
+        organization: formData.get("organization") || "",
+        service: formData.get("service") || "",
+        quantity: formData.get("quantity") || "",
+        deadline: formData.get("deadline") || "",
+        message: fileName
+          ? originalMessage + "\n\nUploaded file selected: " + fileName + " (file upload storage not enabled yet)"
+          : originalMessage
+      };
+
+      fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        body: JSON.stringify(data)
+      })
+        .then(() => {
+          formStatus.style.color = "green";
+          formStatus.textContent = "Thank you! Your quote request has been submitted.";
+          quoteForm.reset();
+        })
+        .catch(() => {
+          formStatus.style.color = "red";
+          formStatus.textContent = "Sorry, something went wrong. Please call us or try again.";
+        })
+        .finally(() => {
+          submitQuoteButton.disabled = false;
+          submitQuoteButton.textContent = "Submit Quote Request";
+        });
+    });
+  </script>
 </body>
 </html>
