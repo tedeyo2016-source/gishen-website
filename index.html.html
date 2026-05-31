@@ -403,14 +403,19 @@
       <p>Tell us what you need and we will respond with pricing, options, and next steps.</p>
     </div>
 
-    <form class="quote-form">
+    <form
+  class="quote-form"
+  action="https://formsubmit.co/orders@gishion-digital.com"
+  method="POST"
+  enctype="multipart/form-data"
+>
       <div class="form-row">
-        <input type="text" placeholder="Full Name" required />
-        <input type="tel" placeholder="Phone Number" required />
+        <input type="text" name="Full Name" placeholder="Full Name" required />
+        <input type="tel" name="Phone Number" placeholder="Phone Number" required />
       </div>
       <div class="form-row">
-        <input type="email" placeholder="Email Address" required />
-        <input type="text" placeholder="Organization / Business Name" />
+        <input type="email" name="Phone Number" placeholder="Email Address" required />
+        <input type="text" name="Organization / Business Name" placeholder="Organization / Business Name" />
       </div>
       <div class="form-row">
         <select required>
@@ -424,16 +429,20 @@
           <option>Event Materials</option>
           <option>Graphic Design</option>
         </select>
-        <input type="text" placeholder="Quantity Needed" />
+        <input type="text" name="Quantity Needed" placeholder="Quantity Needed" />
       </div>
       <div class="form-row">
-        <input type="date" placeholder="Deadline" />
+        <input type="date" name="Deadline" placeholder="Deadline" />
         <input type="file" />
       </div>
       <textarea placeholder="Describe your project, size, color, material, deadline, logo details, or special instructions."></textarea>
       <button type="submit">Submit Quote Request</button>
     </form>
-  </section>
+    <input type="hidden" name="_subject" value="New Gishen Quote Request">
+<input type="hidden" name="_captcha" value="false">
+<input type="hidden" name="_template" value="table">
+<input type="hidden" name="_next" value="https://gishen-digital.com/thankyou.html">
+    </section>
 
   <section id="contact">
     <div class="section-title">
